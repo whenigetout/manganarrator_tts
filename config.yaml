@@ -1,0 +1,20 @@
+# config.yaml
+
+# Output directory where all TTS audio will be saved
+output_folder: E:/pcc_shared/manga_narrator_runs/outputs
+
+# Where speaker reference audio files are stored
+voice_ref_dir: voice_refs
+
+# Default fallback speaker
+default_speaker: female_generic
+
+# Default fallback emotion
+default_emotion: neutral
+
+# Default model settings if emotion mapping fails
+default_cfg: 0.5
+default_exaggeration: 0.5
+
+# Optional: use temp folders per batch
+use_timestamped_output: true

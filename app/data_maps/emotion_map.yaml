@@ -1,0 +1,144 @@
+# all available emotions: ['neutral', 'happy', 'sad', 'angry', 'surprised', 'excited', 'nervous', 'aroused', 'scared', 'curious', 'playful', 'serious', 'calm']
+
+# # 🟢 neutral
+# # "I’ve reviewed the documents you sent over. Everything looks fine on my end. Let me know if you have questions."
+# loud exg 0.5 cfg 0.6
+
+# # 😊 happy
+# # "That’s amazing news! I’m so glad everything worked out the way we hoped. This really made my day!"
+# loud exg 1.1 cfg 0.65
+
+# # 😢 sad
+# # "I tried my best, but it still wasn’t enough. It’s hard to keep going when nothing seems to change. I just… need a moment."
+# very soft exg 0.3 cfg 0.3
+
+# # 😠 angry
+# # "You knew exactly what you were doing, and you did it anyway. Don’t pretend like this wasn’t deliberate. I won’t let this slide."
+# loud exg 1.3 cfg 0.6
+
+# # 😲 surprised 
+# # "Wait—seriously? You’re telling me we actually pulled it off? This is unbelievable, I can’t believe this is real!"
+# loud exg 1.2 cfg 0.7
+
+# # 😲 excited
+# # "Wait—seriously? You’re telling me we actually pulled it off? This is unbelievable, I can’t believe this is real!"
+# loud exg 1.2 cfg 0.7
+
+# # 😰 nervous
+# # "Um… are you sure this is safe? I mean, it’s not like I don’t trust you, but… what if something goes wrong?"
+# very soft exg 0.4 cfg 0.3
+
+# # 🔥 aroused
+# # "You really know how to push my buttons, don’t you? The way you say my name… it sends chills down my spine."
+# very soft exg 0.2 cfg 0.4
+
+# # 😨 scared
+# # "Please… don’t come any closer. I don’t know what you want, but I swear I didn’t do anything!"
+# loud exg 0.8 cfg 0.9
+
+# # 🧐 curious
+# # "That’s… interesting. Why would they hide something like that? Do you think there’s more to it than what we’re seeing?"
+# loud exg 0.7 cfg 0.4
+
+# # 😛 playful
+# # "Oh, is that the best you can do? Come on, I know you’ve got more fight in you than that!"
+# loud exg 1 cfg 0.4
+
+# # 🎯 serious
+# # "This isn’t a game. One mistake, and everything we’ve worked for will be gone. Stay focused."
+# loud exg 1.1 cfg 0.5
+
+# # 🧘 calm
+# # "Take a breath. There’s no rush. Whatever happens next, we’ll face it together."
+# very soft exg 0.6 cfg 0.4
+
+
+female_generic:
+  neutral:     { exaggeration: 0.5, cfg: 0.6 }
+  happy:       { exaggeration: 1.1, cfg: 0.65 }
+  sad:         { exaggeration: 0.3, cfg: 0.3 }
+  angry:       { exaggeration: 1.3, cfg: 0.6 }
+  excited:     { exaggeration: 1.2, cfg: 0.7 }
+  surprised:   { exaggeration: 1.2, cfg: 0.7 }
+  nervous:     { exaggeration: 0.4, cfg: 0.3 }
+  aroused:     { exaggeration: 0.2, cfg: 0.4 }
+  scared:      { exaggeration: 0.8, cfg: 0.9 }
+  curious:     { exaggeration: 0.7, cfg: 0.4 }
+  playful:     { exaggeration: 1.0, cfg: 0.4 }
+  serious:     { exaggeration: 1.1, cfg: 0.5 }
+  calm:        { exaggeration: 0.6, cfg: 0.4 }
+
+male_generic:
+  neutral:     { exaggeration: 0.5, cfg: 0.6 }
+  happy:       { exaggeration: 1.1, cfg: 0.65 }
+  sad:         { exaggeration: 0.3, cfg: 0.3 }
+  angry:       { exaggeration: 1.5, cfg: 0.6 }
+  excited:     { exaggeration: 1.2, cfg: 0.7 }
+  surprised:   { exaggeration: 1.2, cfg: 0.7 }
+  nervous:     { exaggeration: 0.4, cfg: 0.3 }
+  aroused:     { exaggeration: 0.2, cfg: 0.4 }
+  scared:      { exaggeration: 0.8, cfg: 0.9 }
+  curious:     { exaggeration: 0.7, cfg: 0.4 }
+  playful:     { exaggeration: 1.0, cfg: 0.4 }
+  serious:     { exaggeration: 1.1, cfg: 0.5 }
+  calm:        { exaggeration: 0.6, cfg: 0.4 }
+
+female_shelby:
+  neutral:     { exaggeration: 0.5, cfg: 0.6 }
+  happy:       { exaggeration: 1.1, cfg: 0.65 }
+  sad:         { exaggeration: 0.3, cfg: 0.3 }
+  angry:       { exaggeration: 1.3, cfg: 0.6 }
+  excited:     { exaggeration: 1.2, cfg: 0.7 }
+  surprised:   { exaggeration: 1.2, cfg: 0.7 }
+  nervous:     { exaggeration: 0.4, cfg: 0.3 }
+  aroused:     { exaggeration: 0.2, cfg: 0.4 }
+  scared:      { exaggeration: 0.8, cfg: 0.9 }
+  curious:     { exaggeration: 0.7, cfg: 0.4 }
+  playful:     { exaggeration: 1.0, cfg: 0.4 }
+  serious:     { exaggeration: 1.1, cfg: 0.5 }
+  calm:        { exaggeration: 0.6, cfg: 0.4 }
+
+rote_loud:
+  neutral:     { exaggeration: 0.5, cfg: 0.6 }
+  happy:       { exaggeration: 1.1, cfg: 0.65 }
+  sad:         { exaggeration: 0.3, cfg: 0.3 }
+  angry:       { exaggeration: 1.3, cfg: 0.6 }
+  excited:     { exaggeration: 1.2, cfg: 0.7 }
+  surprised:   { exaggeration: 1.2, cfg: 0.7 }
+  nervous:     { exaggeration: 0.4, cfg: 0.3 }
+  aroused:     { exaggeration: 0.2, cfg: 0.4 }
+  scared:      { exaggeration: 0.8, cfg: 0.9 }
+  curious:     { exaggeration: 0.7, cfg: 0.4 }
+  playful:     { exaggeration: 1.0, cfg: 0.4 }
+  serious:     { exaggeration: 1.1, cfg: 0.5 }
+  calm:        { exaggeration: 0.6, cfg: 0.4 }
+
+rote_soft:
+  neutral:     { exaggeration: 0.5, cfg: 0.6 }
+  happy:       { exaggeration: 1.1, cfg: 0.65 }
+  sad:         { exaggeration: 0.3, cfg: 0.3 }
+  angry:       { exaggeration: 1.3, cfg: 0.6 }
+  excited:     { exaggeration: 1.2, cfg: 0.7 }
+  surprised:   { exaggeration: 1.2, cfg: 0.7 }
+  nervous:     { exaggeration: 0.4, cfg: 0.3 }
+  aroused:     { exaggeration: 0.2, cfg: 0.4 }
+  scared:      { exaggeration: 0.8, cfg: 0.9 }
+  curious:     { exaggeration: 0.7, cfg: 0.4 }
+  playful:     { exaggeration: 1.0, cfg: 0.4 }
+  serious:     { exaggeration: 1.1, cfg: 0.5 }
+  calm:        { exaggeration: 0.6, cfg: 0.4 }
+
+rote_very_soft:
+  neutral:     { exaggeration: 0.5, cfg: 0.6 }
+  happy:       { exaggeration: 1.1, cfg: 0.65 }
+  sad:         { exaggeration: 0.3, cfg: 0.3 }
+  angry:       { exaggeration: 1.3, cfg: 0.6 }
+  excited:     { exaggeration: 1.2, cfg: 0.7 }
+  surprised:   { exaggeration: 1.2, cfg: 0.7 }
+  nervous:     { exaggeration: 0.4, cfg: 0.3 }
+  aroused:     { exaggeration: 0.2, cfg: 0.4 }
+  scared:      { exaggeration: 0.8, cfg: 0.9 }
+  curious:     { exaggeration: 0.7, cfg: 0.4 }
+  playful:     { exaggeration: 1.0, cfg: 0.4 }
+  serious:     { exaggeration: 1.1, cfg: 0.5 }
+  calm:        { exaggeration: 0.6, cfg: 0.4 }

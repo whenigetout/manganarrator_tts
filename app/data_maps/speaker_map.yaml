@@ -1,0 +1,12 @@
+female:
+  default: "female_generic.wav"
+  shelby: "female_shelby.wav"
+  rote_loud: "rote_loud.wav"
+  rote_soft: "rote_soft.wav"
+  rote_very_soft: "rote_very_soft.wav"
+
+male:
+  default: "male_generic.wav"
+
+unknown:
+  default: "unknown_generic.wav"
