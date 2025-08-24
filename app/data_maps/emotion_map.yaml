@@ -53,6 +53,21 @@
 # very soft exg 0.6 cfg 0.4
 
 
+default:
+  neutral:     { exaggeration: 0.5, cfg: 0.6 }
+  happy:       { exaggeration: 1.1, cfg: 0.65 }
+  sad:         { exaggeration: 0.3, cfg: 0.3 }
+  angry:       { exaggeration: 1.3, cfg: 0.6 }
+  excited:     { exaggeration: 1.2, cfg: 0.7 }
+  surprised:   { exaggeration: 1.2, cfg: 0.7 }
+  nervous:     { exaggeration: 0.4, cfg: 0.3 }
+  aroused:     { exaggeration: 0.2, cfg: 0.4 }
+  scared:      { exaggeration: 0.8, cfg: 0.9 }
+  curious:     { exaggeration: 0.7, cfg: 0.4 }
+  playful:     { exaggeration: 1.0, cfg: 0.4 }
+  serious:     { exaggeration: 0.6, cfg: 0.4 }
+  calm:        { exaggeration: 0.6, cfg: 0.4 }
+
 female_generic:
   neutral:     { exaggeration: 0.5, cfg: 0.6 }
   happy:       { exaggeration: 1.1, cfg: 0.65 }

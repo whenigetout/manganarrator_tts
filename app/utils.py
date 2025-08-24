@@ -34,7 +34,10 @@ class Timer:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        duration = time.perf_counter() - self.start_time
+        if self.start_time is not None:
+            duration = time.perf_counter() - self.start_time
+        else:
+            duration = 0.0
         Timer.last_duration = duration
 
         if self.use_spinner and self.status:

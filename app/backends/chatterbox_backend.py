@@ -40,13 +40,15 @@ class ChatterboxTTSBackend:
         # For female voice "RoteDisaster" from gonewildaudio these settings work better and it is not possible to express
         # all said emotions with just one sample voice files so we divide voice samples to be used based on emotions
         # this has been curated and tested, only for this voice at the time of writing (Fri, 01 Aug, 2025)
-        if gender == "female" and speaker_id in ["rote_loud", "rote_very_soft", "default"]:
+        if gender == "female": # and speaker_id in ["rote_loud", "rote_very_soft", "default"]:
             if emotion in ['neutral', 'happy', 'angry', 'surprised', 'excited', 'scared', 'curious', 'playful', 'serious']:
                 speaker_id = "rote_loud"
             elif emotion in ['sad', 'nervous', 'aroused', 'calm']:
                 speaker_id = "rote_very_soft"
             else:
                 speaker_id = "default"
+        else:
+            speaker_id = "default"
 
         voice_ref_path = self._get_voice_ref(gender, speaker_id)
         if custom_cfg is not None and custom_exaggeration is not None:
@@ -135,4 +137,5 @@ class ChatterboxTTSBackend:
 
         cfg = emotion_cfg.get("cfg", self.config.default_cfg)
         exaggeration = emotion_cfg.get("exaggeration", self.config.default_exaggeration)
+        print(f"🌿ℹ Using predefinted values for voice {voice_key} - exg: {exaggeration} cfg: {cfg}")
         return cfg, exaggeration
