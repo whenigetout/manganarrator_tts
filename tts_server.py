@@ -167,6 +167,7 @@ def tts_dialogue(request: TTSDialogueRequest):
 
         filename = os.path.basename(request.image_file_name)  # removes all preceding folders
         sanitized_filename = filename.replace(".", "_")       # replaces '.' in extension
+        base_dir = Path(runner.config.output_folder).resolve()
 
         kwargs = {
             "text": request.text,
@@ -184,11 +185,13 @@ def tts_dialogue(request: TTSDialogueRequest):
             kwargs["custom_exaggeration"] = request.exaggeration
 
         result = runner.generate_line(**kwargs)
+        abs_path = Path(result["audio_path"]).resolve()
+        rel_path = abs_path.relative_to(base_dir)
 
-        return TTSDialogueResponse({
-            "status": "success",
-            "audio_path": result["audio_path"]
-        })
+        return TTSDialogueResponse(
+            status= "success",
+            audio_path= rel_path.as_posix()
+        )
 
     except Exception as e:
         from app.utils import log_exception

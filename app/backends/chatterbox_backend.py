@@ -116,6 +116,7 @@ class ChatterboxTTSBackend:
                 cfg_weight=cfg
             )
             ta.save(str(out_path), wav, self.model.sr)
+            print(f"IN synthesize(): saved wav file at {str(out_path)}")
 
         return str(out_path)
 
