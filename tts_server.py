@@ -139,7 +139,7 @@ async def tts_emotion_tuning(request: EmotionTuneRequest):
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
-class DialogueRequest(BaseModel):
+class TTSDialogueRequest(BaseModel):
     text: str
     gender: str
     emotion: str
@@ -152,9 +152,17 @@ class DialogueRequest(BaseModel):
     exaggeration: Optional[float] = None
     cfg: Optional[float] = None
 
+class TTSDialogueResponse(BaseModel):
+    status: str
+    audio_path: str
 
-@app.post("/tts/dialogue", summary="Generate TTS for one dialogue with versioned path")
-def tts_dialogue(request: DialogueRequest):
+
+@app.post(
+    "/tts/dialogue", 
+    response_model=TTSDialogueResponse,
+    summary="Generate TTS for one dialogue with versioned path"
+    )
+def tts_dialogue(request: TTSDialogueRequest):
     try:
 
         filename = os.path.basename(request.image_file_name)  # removes all preceding folders
@@ -177,13 +185,23 @@ def tts_dialogue(request: DialogueRequest):
 
         result = runner.generate_line(**kwargs)
 
-        return {
+        return TTSDialogueResponse({
             "status": "success",
             "audio_path": result["audio_path"]
-        }
+        })
 
     except Exception as e:
         from app.utils import log_exception
         log_exception("Failed TTS for dialogue line:")
-        return {"status": "error", "message": str(e)}
+
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "TTS_FAILED",
+                "message": str(e),
+                "run_id": request.run_id,
+                "dialogue_id": request.dialogue_id
+            }
+        )
+
 
