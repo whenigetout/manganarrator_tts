@@ -2,9 +2,18 @@ from pathlib import Path
 from app.config import TTSConfig
 from app.utils import Timer
 from app.backends.chatterbox_backend import ChatterboxTTSBackend
-from datetime import datetime
-import uuid
-import json
+from app.models.domain import (
+    domain as d, 
+    exceptions as ex,
+    speaker as s
+)
+from app.models.api import TTSOutput
+from app.services.tts_resolver import (
+    resolve_emotion,
+    resolve_gender,
+    resolve_speaker
+)
+from app.utils import ensure_folder
 
 class TTSRunner:
     def __init__(self, config: TTSConfig):
@@ -12,7 +21,8 @@ class TTSRunner:
         Initialize the TTSRunner with a config and prepare the Chatterbox backend.
         """
         self.config = config
-        self.output_dir = Path(config.output_folder)
+        self.media_root = str(config.media_root)
+        self.media_namespace = str(config.media_namespace)
         self.backend = None
         """
         Load the ChatterboxTTS model.
@@ -22,106 +32,73 @@ class TTSRunner:
 
     def generate_line(
         self,
-        text: str,
-        gender: str,
-        emotion: str = None,
-        speaker_id: str = "default",
-        run_id: str = None,
-        custom_filename: str = None,
-        custom_cfg: float = None,
-        custom_exaggeration: float = None,
-        image_rel_path_from_root: str = None,
-        image_file_name: str = None,
-        dialogue_id: str = None
-    ) -> dict:
+        req: d.TTSInput
+    ) -> TTSOutput:
 
         """
         Generate a TTS audio file from a single line of text and return output metadata.
         """
-        if self.backend is None:
-            raise RuntimeError("TTS model is not loaded.")
+        try:
+            if self.backend is None:
+                raise RuntimeError("TTS model is not loaded.")
+            
+            gender = resolve_gender(req.gender.value)
+            emotion = resolve_emotion(req.emotion.name, req.customSettings)
+            
 
-        wav_path = self.backend.synthesize(
-            text=text,
-            gender=gender,
-            emotion=emotion,
-            speaker_id=speaker_id,
-            run_id=run_id,
-            custom_filename=custom_filename,
-            custom_cfg=custom_cfg,
-            custom_exaggeration=custom_exaggeration,
-            image_rel_path_from_root=image_rel_path_from_root,
-            image_file_name=image_file_name,
-            dialogue_id=dialogue_id
-        )
+            # Remove this later after tuning voices -----------------
+                # For female voice "RoteDisaster" from gonewildaudio these settings work better and it is not possible to express
+                # all said emotions with just one sample voice files so we divide voice samples to be used based on emotions
+                # this has been curated and tested, only for this voice at the time of writing (Fri, 01 Aug, 2025)
+            speaker_name = ""
+            if gender.value == "female": # and speaker in ["rote_loud", "rote_very_soft", "default"]:
+                if emotion.name in ['neutral', 'happy', 'angry', 'surprised', 'excited', 'scared', 'curious', 'playful', 'serious']:
+                    speaker_name = "rote_loud"
+                elif emotion.name in ['sad', 'nervous', 'aroused', 'calm']:
+                    speaker_name = "rote_very_soft"
+                else:
+                    speaker_name = "default"
+            else:
+                pass
 
-        return {
-            "text": text,
-            "gender": gender,
-            "emotion": emotion,
-            "speaker_id": speaker_id,
-            "audio_path": wav_path
-        }
 
-    def process_ocr_result(self, ocr_json: dict, ocr_runid: str) -> dict:
-        """
-        Process OCR output, generate voice files, and return updated JSON.
-        """
-        if self.backend is None:
-            raise RuntimeError("TTS model is not loaded.")
+            speaker = resolve_speaker(req.gender, req.speaker if not speaker_name else 
+                                      s.Speaker(
+                                          name=speaker_name,
+                                          wav_file="",
+                                          gender=gender
+                                      )
+                                      )
 
-        # Generate a timestamped run ID like: tts_20250730_031021_<uuid>_<ocr_runid>
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            
+            # -------------------------------------------------------
 
-        # Output folder
-        out_dir = self.output_dir / ocr_runid
+            # Prevent invalid inputs
+            if not req.text or not req.run_id or req.dialogue_id < 0:
+                raise ex.TTSInputError("Invalid TTS Input")
 
-        if not out_dir or not out_dir.is_dir():
-            raise ValueError("Output folder does not exist. Did you move the folder generated from OCR-module?")
+            new_req = req.model_copy(
+                update={
+                    "gender": gender,
+                    "emotion": emotion,
+                    "speaker": speaker
+                }
+            )
 
-        # Begin processing
-        with Timer("🔁 TTS batch generation"):
-            for entry in ocr_json:
-                image_name = entry.get("image", "unknown_img")
+            # if the img name is "img002.jpg", then out_dir = "image002_jpg"
+            root = self.media_root
+            ns = self.media_namespace
+            img_path_without_ext = Path(req.image_ref.path).with_suffix("")
+            img_ext_without_dot = req.image_ref.suffix[1:] # exclude the "."
+            out_dir: Path = Path(root)/ns/new_req.run_id/f"{img_path_without_ext}_{img_ext_without_dot}"
+            ensure_folder(out_dir)
 
-                if "parsed_dialogue" not in entry or not entry["parsed_dialogue"]:
-                    print(f"⚠️ No parsed_dialogue in {image_name}")
-                    continue
+            res: TTSOutput = self.backend.synthesize(
+                req=new_req,
+                out_dir=out_dir
+                )
 
-                for line in entry["parsed_dialogue"]:
-                    text = line.get("text")
-                    image_rel_path_from_root = line.get("image_rel_path_from_root")
-                    image_file_name = line.get("image_file_name")
-                    gender = line.get("gender", "unknown")
-                    emotion = line.get("emotion", self.config.default_emotion)
-                    speaker_id = line.get("speaker", "default")
-                    dialogue_id = line.get("id")
+            return res
+        except Exception as e:
+            raise ex.TTSInputError("Input data validation failed") from e
 
-                    try:
-                        # file_base = f"{image_name}_dialogueid_{dialogue_id}"
-                        wav_result = self.generate_line(
-                            text=text,
-                            gender=gender,
-                            emotion=emotion,
-                            speaker_id=speaker_id,
-                            run_id=ocr_runid,
-                            image_rel_path_from_root=image_rel_path_from_root,
-                            image_file_name=image_file_name,
-                            dialogue_id=dialogue_id
-                        )
-                        line["voice_path"] = wav_result["audio_path"]
-
-                    except Exception as e:
-                        print(f"❌ Failed to synthesize line {dialogue_id} in {image_name}: {e}")
-                        line["voice_path"] = None
-
-        # Save full updated JSON
-        output_json_path = out_dir / "tts_output.json"
-        with open(output_json_path, "w", encoding="utf-8") as f:
-            json.dump(ocr_json, f, indent=2)
-
-        return {
-            "runid": ocr_runid,
-            "output_folder": str(out_dir),
-            "num_images": len(ocr_json)
-        }

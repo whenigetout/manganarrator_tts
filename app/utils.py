@@ -1,6 +1,8 @@
 from pathlib import Path
 import time
 from rich.console import Console
+from app.models.domain.domain import MediaRef
+from app.models.domain.exceptions import EnvError
 
 import traceback
 
@@ -10,6 +12,23 @@ def log_exception(context: str = "Unhandled exception", label: str = "💀"):
 
 def ensure_folder(path: Path):
     path.mkdir(parents=True, exist_ok=True)
+    return path
+
+# Helper to extract version number of tts generated wav file by checking existing files
+def get_next_version(folder_path: Path) -> int:
+    pattern = f"v*.wav"
+    versions = []
+    if not folder_path.exists() or not folder_path.is_dir():
+        raise EnvError("Invalid tts output folder.")
+    for file in folder_path.glob(pattern):
+        parts = file.stem.split("__")
+        if len(parts) > 0 and parts[0].startswith("v"):
+            try:
+                version_num = int(parts[0][1:])
+                versions.append(version_num)
+            except ValueError:
+                continue
+    return max(versions, default=0) + 1
 
 class Timer:
     last_duration = 0.0

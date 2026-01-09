@@ -2,6 +2,8 @@
 
 # Output directory where all TTS audio will be saved
 output_folder: E:/pcc_shared/manga_narrator_runs/outputs
+media_root: E:/pcc_shared/manga_narrator_runs/
+media_namespace: outputs
 
 # Where speaker reference audio files are stored
 voice_ref_dir: voice_refs
