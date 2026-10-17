@@ -46,32 +46,11 @@ class TTSRunner:
             emotion = resolve_emotion(req.emotion.name, req.customSettings)
             
 
-            # Remove this later after tuning voices -----------------
-                # For female voice "RoteDisaster" from gonewildaudio these settings work better and it is not possible to express
-                # all said emotions with just one sample voice files so we divide voice samples to be used based on emotions
-                # this has been curated and tested, only for this voice at the time of writing (Fri, 01 Aug, 2025)
-            speaker_name = ""
-            if gender.value == "female": # and speaker in ["rote_loud", "rote_very_soft", "default"]:
-                if emotion.name in ['neutral', 'happy', 'angry', 'surprised', 'excited', 'scared', 'curious', 'playful', 'serious']:
-                    speaker_name = "rote_loud"
-                elif emotion.name in ['sad', 'nervous', 'aroused', 'calm']:
-                    speaker_name = "rote_very_soft"
-                else:
-                    speaker_name = "default"
-            else:
-                pass
+            # Preserve the explicitly selected speaker. Previously every female
+            # request was silently replaced with one of the Rote reference voices.
+            speaker = resolve_speaker(req.gender, req.speaker)
 
 
-            speaker = resolve_speaker(req.gender, req.speaker if not speaker_name else 
-                                      s.Speaker(
-                                          name=speaker_name,
-                                          wav_file="",
-                                          gender=gender
-                                      )
-                                      )
-
-            
-            # -------------------------------------------------------
 
             # Prevent invalid inputs
             if not req.text or not req.run_id or req.dialogue_id < 0:
