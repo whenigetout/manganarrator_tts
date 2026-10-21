@@ -22,7 +22,7 @@ SPEAKER_GROUPS: Final[dict[str, dict[str, Speaker]]] = {
         "default": Speaker(name="default", wav_file="male_default.wav", gender=GENDERS["male"]),
     },
     "unknown": {
-        "default": Speaker(name="default", wav_file="unknown_default.wav", gender=GENDERS["unknown"]),
+        "default": Speaker(name="default", wav_file="unknown_default.wav", gender=GENDERS["neutral"]),
     },
 }
 
